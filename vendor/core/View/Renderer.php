@@ -74,6 +74,9 @@ class Renderer
             $page = str_replace('##FOOTER##', $header, $footer);
         }
 
+        // inclusão de páginas personalizadas
+        $page = $this->includes($page);
+
         echo $page;
         return;
     }
@@ -90,5 +93,31 @@ class Renderer
         extract($this->params, EXTR_OVERWRITE);
         include $path;
         return ob_get_clean();
+    }
+
+    /**
+     * Aplicação, se houver, dos includes da view
+     *
+     * @param string $page
+     * @return string
+     */
+    private function includes($page): string
+    {
+        $position = 0;
+        $needle = '##INCLUDE';
+        while(($position = strpos($page, $needle, $position)) !== false){
+            $endPosition = strpos($page, ')##', $position); // posição final da string de include
+            $start = ($position + strlen($needle)); // posição inicial para nome do arquivo
+
+            $path = trim(substr($page, ++$start, ($endPosition - $start)), "'"); // consulta do nome do arquivo
+            $path = str_replace('.', '/', $path); // troca do separador para barras
+
+            $include = $this->content(APPLICATION_PATH . "app/View/{$path}.php"); // captura do conteúdo do arquivo incluído
+            $page = substr_replace($page, $include, $position, (($endPosition + 3) - $position)); // replace do arquivo incluído na página
+
+            $position = $position + strlen($needle); // adição de valores no "contador"
+        }
+
+        return $page;
     }
 }

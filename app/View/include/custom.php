@@ -1,0 +1,1 @@
+<p>arquivo incluído. Variável: <?php echo $nome; ?></p>
