@@ -38,7 +38,7 @@ class Renderer
      * @param string $template
      * @return $this
      */
-    public function template(string $template)
+    public function template(string $template): Renderer
     {
         $this->template = $template;
         return $this;
