@@ -1,2 +1,3 @@
 # ddlframework
-A simple framework to small projects
+A simple framework built for learning purposes
+
